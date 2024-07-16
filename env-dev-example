@@ -1,0 +1,26 @@
+#SECURE CREDENTIALS
+
+# replace your port
+PORT=
+
+# replace your key
+SECRET_KEY=
+
+#replace your key with 32 bytes
+CRYPTO_SECRET=
+# replace your interested crypto algorithm
+CRYPTO_ALGORITHM=aes-256-gcm
+# replace string encoding format 
+CRYPTO_FORMAT=
+
+#MAIL SECURES
+# replace your SMTP host
+SMTP_HOST=
+# replace your SMTP port
+SMTP_PORT=
+# replace your SMTP secure
+SMTP_SECURE=
+# replace your SMTP email
+SMTP_USER=
+# replace your SMTP email password
+SMTP_PASS= 
