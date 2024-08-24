@@ -17,6 +17,8 @@ class InitilizeApp {
         });
 
         this.app.use((err, req, res, next) => {
+            console.log(err.message)
+            console.log('errro occures')
             return response.errorResponse(res, 500, 'Internal server error')
         });
     }

@@ -1,13 +1,22 @@
 import * as response from '../../../utils/response.handler'
 import * as crypto from '../../../app-core-services/crypto.service'
-export const createAdmin = async (req, res) => {
+export const createAdmin = (req, res) => {
+        try {
+            console.log(data)
+            // res.status(200).json({ status_code: 200, status: true, message: 'Application api started working' })
+        }
+        catch (error) {
+            console.log('eerr')
+            throw error;    
+        }
+}
+
+export const loginAdmin = (req, res) => {
     try {
-        const response= crypto.encryptText(req.body.text)
-        const decrypt=crypto.decryptText(response) 
-        console.log(response)
-        return res.json({'encryptData':response,'decrypt':decrypt})
+        console.log(hifi);
     }
     catch (error) {
-        return response.errorResponse(res, 500, error.message);
+        throw error;
     }
 }
+
