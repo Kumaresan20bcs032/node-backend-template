@@ -1,50 +1,33 @@
 import express, { urlencoded } from 'express';
-// import helmet from 'helmet';
+import helmet from 'helmet';
 import cors from 'cors';
-// import fileUpload from 'express-fileupload';
+import fileUpload from 'express-fileupload';
 import chalk from 'cli-color';
- 
+import appInitialize from './app-configurations/middleware.configuration';
+import mongoDbConnection from './app-configurations/mongoose.configuration';
+import * as response from './utils/response.handler';
+import * as rateLimit from './utils/api.rate.limit';
 const app = express();
- 
- 
-import { DefaultAzureCredential, getBearerTokenProvider } from "@azure/identity";
- 
-const credential = new DefaultAzureCredential();
-const scope = "https://cognitiveservices.azure.com/.default";
-const azureADTokenProvider = getBearerTokenProvider(credential, scope);
- 
- 
-import { AzureOpenAI } from "openai";
- 
-const deployment = "o1";
-const apiVersion = "2024-12-17-preview";
-const baseURL = "https://my-openai-service1.openai.azure.com";
-const client = new AzureOpenAI({ azureADTokenProvider, deployment, apiVersion,baseURL });
- 
- 
-const messages = [
-  { role: "system", content: "You are a helpful assistant." },
-  { role: "user", content: "Can you show me an example of how to construct a chat message payload?" }
-];
- 
- 
-const vv=async () => {
-  try{
- 
-    const result = await client.chat.completions.create({
-      model: "o1",
-      messages,
-      max_tokens: 5000,
-    });
-    console.log("result",result.choices[0].message.content);
-  }
-  catch(error){
-    console.log("error",error);
-  }
-}
- 
-vv()
- 
-app.listen(process.env.PORT || 3002, () => {
-  console.log(chalk.magentaBright.bold.italic(`server started at port ${process.env.PORT || 3002}`))
+
+//@Declare all middlewares Here
+app.use(cors()); //Enabling CORS for communicating different origins
+app.use(helmet()); //Increasing security mechanism for express application based on http headers
+app.use(rateLimit.expressRateLimitOptions()); //To set rate limit based on your needs
+app.use(express.json({ limit: '50mb' })); //Parse the incoming body request
+app.use(urlencoded({ extended: true }));
+app.use(fileUpload()); //Express file upload middleware
+app.use('/uploads', express.static('./files/uploads')); //It can serves static files from files/uploads in root directory, if you need you can change according to your business logic
+// app.use((err, req, res, next) => {
+//   return response.errorResponse(res, 500, 'Internal server error')
+// });
+app.get('/', (req, res) => {
+  return response.successResponse(res, 200, 'Application working well');
+}); //Initial Request to checking application as working
+
+new mongoDbConnection();
+new appInitialize(app);
+
+
+app.listen(process.env.PORT || 3000, () => {
+  console.log(chalk.magentaBright.bold.italic(`server started at port ${process.env.PORT || 3000}`))
 });
